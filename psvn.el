@@ -3108,11 +3108,11 @@ Put the found values in `svn-status-base-info'."
 
 (defun svn-status-base-info->url ()
   "Extract the url part from `svn-status-base-info'."
-  (plist-get svn-status-base-info :url ""))
+  (plist-get svn-status-base-info :url))
 
 (defun svn-status-base-info->repository-root ()
   "Extract the repository-root part from `svn-status-base-info'."
-  (plist-get svn-status-base-info :repository-root ""))
+  (plist-get svn-status-base-info :repository-root))
 
 (defun svn-status-checkout-prefix-path ()
   "When only a part of the svn repository is checked out, return the file path for this checkout."
@@ -6017,9 +6017,9 @@ You can send raw data to the process via \\[svn-process-send-string]."
       (setq old-process-default-dir default-directory)
       (setq default-directory directory)) ;; update the default-directory for the *svn-process* buffer
     (svn-status-parse-info t)
-    (or (plist-get svn-status-base-info :repository-root nil)
-        (if (plist-get svn-status-base-info :repository-uuid nil)
-            (concat "Svn Repo UUID: " (plist-get svn-status-base-info :repository-uuid nil))
+    (or (plist-get svn-status-base-info :repository-root)
+        (if (plist-get svn-status-base-info :repository-uuid)
+            (concat "Svn Repo UUID: " (plist-get svn-status-base-info :repository-uuid))
           (message "psvn.el: Detected an old svn working copy in '%s'. Please check it out again to get a 'Repository Root' entry in the svn info output."
                    default-directory)))))
 
@@ -6057,7 +6057,7 @@ This function is used for svn clients version 1.7 and up."
         wc-root)
     (when (svn-version-controlled-dir-p default-directory)
       (svn-status-parse-info t)
-      (setq wc-root (file-name-as-directory (plist-get svn-status-base-info :working-copy-root-path nil)))
+      (setq wc-root (file-name-as-directory (plist-get svn-status-base-info :working-copy-root-path)))
       (when wc-root
         ;; traversing up the hierarchy shortens the path name. Stop if
         ;; it doesn't, e.g we reached / already.
